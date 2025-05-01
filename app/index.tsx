@@ -115,8 +115,10 @@ export default function HomeScreen() {
         keyExtractor={(item) => item.id}
         renderItem={renderTask}
       />
-      <View className="flex flex-row items-center justify-center w-20 h-20 p-4 bg-brand-primary rounded-full">
-        <Plus size={24} color="white" />
+      <View className="relative flex flex-row items-center justify-center w-full">
+        <View className="absolute -bottom-0 flex flex-row items-center justify-center w-20 h-20 p-4 bg-brand-primary rounded-full">
+          <Plus size={32} color="hsl(11, 72%, 3%)" />
+        </View>
       </View>
     </View>
   );
