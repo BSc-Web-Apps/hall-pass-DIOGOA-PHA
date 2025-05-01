@@ -1,21 +1,73 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, FlatList } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { Plus } from "lucide-react-native";
+
+interface Task {
+  id: string;
+  title: string;
+  subtitle?: string;
+  completed: boolean;
+}
 
 export default function HomeScreen() {
-  const [tasks, setTasks] = useState([
-    { id: "1", title: "Feed the cat", completed: false },
-    { id: "2", title: "Submit Assignment", completed: false },
-    { id: "3", title: "Library Research", completed: true },
-    { id: "4", title: "Group Project Meeting", completed: false },
-    { id: "5", title: "Read Chapter 5", completed: false },
-    { id: "6", title: "Submit Essay", completed: true },
-    { id: "7", title: "Quiz Preparation", completed: false },
-    { id: "8", title: "Lab Report Submission", completed: false },
-    { id: "9", title: "Project Proposal", completed: true },
-  ]);
+  const [tasks, setTasks] = useState<Task[]>([]);
 
-  const toggleTask = (id) => {
+  useEffect(() => {
+    const initialTasks: Task[] = [
+      {
+        id: "1",
+        title: "Submit Assignment",
+        subtitle: "Due: Oct 20",
+        completed: false,
+      },
+      {
+        id: "2",
+        title: "Library Research",
+        subtitle: "Economics",
+        completed: true,
+      },
+      {
+        id: "3",
+        title: "Group Project Meeting",
+        subtitle: "Prepare slides",
+        completed: false,
+      },
+      {
+        id: "4",
+        title: "Read Chapter 5",
+        subtitle: "For next class",
+        completed: false,
+      },
+      {
+        id: "5",
+        title: "Submit Essay",
+        subtitle: "English Literature",
+        completed: true,
+      },
+      {
+        id: "6",
+        title: "Quiz Preparation",
+        subtitle: "Math Quiz",
+        completed: false,
+      },
+      {
+        id: "7",
+        title: "Lab Report Submission",
+        subtitle: "Physics Lab",
+        completed: false,
+      },
+      {
+        id: "8",
+        title: "Project Proposal",
+        subtitle: "History Project",
+        completed: true,
+      },
+    ];
+    setTasks(initialTasks);
+  }, []);
+
+  const toggleTask = (id: string) => {
     setTasks((prevTasks) =>
       prevTasks.map((task) =>
         task.id === id ? { ...task, completed: !task.completed } : task
@@ -23,23 +75,35 @@ export default function HomeScreen() {
     );
   };
 
-  const renderTask = ({ item }) => (
+  const renderTask = ({ item }: { item: Task }) => (
     <TouchableOpacity
-      className="flex flex-row items-center p-4 border-b border-gray-700"
+      className="flex flex-row items-start p-4 border-b border-gray-700"
       onPress={() => toggleTask(item.id)}
     >
       <Ionicons
         name={item.completed ? "checkbox" : "square-outline"}
         size={24}
         color={item.completed ? "#FF5733" : "#FFFFFF"}
+        style={{ marginTop: 4 }}
       />
-      <Text
-        className={`ml-4 text-lg ${
-          item.completed ? "line-through text-gray-400" : "text-white"
-        }`}
-      >
-        {item.title}
-      </Text>
+      <View className="ml-4">
+        <Text
+          className={`text-lg font-semibold ${
+            item.completed ? "line-through text-gray-400" : "text-white"
+          }`}
+        >
+          {item.title}
+        </Text>
+        {item.subtitle && (
+          <Text
+            className={`text-sm ${
+              item.completed ? "line-through text-gray-500" : "text-gray-400"
+            }`}
+          >
+            {item.subtitle}
+          </Text>
+        )}
+      </View>
     </TouchableOpacity>
   );
 
@@ -51,6 +115,9 @@ export default function HomeScreen() {
         keyExtractor={(item) => item.id}
         renderItem={renderTask}
       />
+      <View className="flex flex-row items-center justify-center w-20 h-20 p-4 bg-brand-primary rounded-full">
+        <Plus size={24} color="white" />
+      </View>
     </View>
   );
 }
