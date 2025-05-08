@@ -1,27 +1,30 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react-native";
-import Task from "../components/Task"; // Adjust path as needed
+import { RenderTask } from "../app/index";
 
-// Mock any components or contexts used by Task
-jest.mock("~/lib/TaskContext", () => ({
-  useTasks: () => ({
-    updateTask: jest.fn(),
-    deleteTask: jest.fn(),
-  }),
+// Mock @expo/vector-icons
+jest.mock("@expo/vector-icons", () => ({
+  Ionicons: "Ionicons",
 }));
 
-describe("Task", () => {
+// Mock lucide-react-native
+jest.mock("lucide-react-native", () => ({
+  Plus: "Plus",
+}));
+
+describe("RenderTask", () => {
   test("renders a task", () => {
     const task = {
-      id: 1,
+      id: "1",
       title: "Test Task",
-      category: "Test Category",
-      isChecked: false,
+      subtitle: "Test Category",
+      completed: false,
     };
+    const mockToggleTask = jest.fn();
 
-    render(<Task task={task} />);
+    render(<RenderTask item={task} toggleTask={mockToggleTask} />);
 
-    // Just check if the title and category are displayed
+    // Check if the title and category are displayed
     const titleElement = screen.getByText("Test Task");
     const categoryElement = screen.getByText("Test Category");
     expect(titleElement).toBeTruthy();

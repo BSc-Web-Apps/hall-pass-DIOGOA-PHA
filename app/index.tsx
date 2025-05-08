@@ -9,6 +9,41 @@ interface Task {
   subtitle?: string;
   completed: boolean;
 }
+interface RenderTaskProps {
+  item: Task;
+  toggleTask: (id: string) => void;
+}
+export const RenderTask = ({ item, toggleTask }: RenderTaskProps) => (
+  <TouchableOpacity
+    className="flex flex-row items-start p-4 border-b border-gray-700"
+    onPress={() => toggleTask(item.id)}
+  >
+    <Ionicons
+      name={item.completed ? "checkbox" : "square-outline"}
+      size={24}
+      color={item.completed ? "#FF5733" : "#FFFFFF"}
+      style={{ marginTop: 4 }}
+    />
+    <View className="ml-4">
+      <Text
+        className={`text-lg font-semibold ${
+          item.completed ? "line-through text-gray-400" : "text-white"
+        }`}
+      >
+        {item.title}
+      </Text>
+      {item.subtitle && (
+        <Text
+          className={`text-sm ${
+            item.completed ? "line-through text-gray-500" : "text-gray-400"
+          }`}
+        >
+          {item.subtitle}
+        </Text>
+      )}
+    </View>
+  </TouchableOpacity>
+);
 
 export default function HomeScreen() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -75,45 +110,13 @@ export default function HomeScreen() {
     );
   };
 
-  const renderTask = ({ item }: { item: Task }) => (
-    <TouchableOpacity
-      className="flex flex-row items-start p-4 border-b border-gray-700"
-      onPress={() => toggleTask(item.id)}
-    >
-      <Ionicons
-        name={item.completed ? "checkbox" : "square-outline"}
-        size={24}
-        color={item.completed ? "#FF5733" : "#FFFFFF"}
-        style={{ marginTop: 4 }}
-      />
-      <View className="ml-4">
-        <Text
-          className={`text-lg font-semibold ${
-            item.completed ? "line-through text-gray-400" : "text-white"
-          }`}
-        >
-          {item.title}
-        </Text>
-        {item.subtitle && (
-          <Text
-            className={`text-sm ${
-              item.completed ? "line-through text-gray-500" : "text-gray-400"
-            }`}
-          >
-            {item.subtitle}
-          </Text>
-        )}
-      </View>
-    </TouchableOpacity>
-  );
-
   return (
     <View className="flex-1 bg-black p-6">
       <Text className="text-3xl text-white font-bold mb-6">HallPass</Text>
       <FlatList
         data={tasks}
         keyExtractor={(item) => item.id}
-        renderItem={renderTask}
+        renderItem={({ item }) => RenderTask({ item, toggleTask })}
       />
       <View className="relative flex flex-row items-center justify-center w-full">
         <View className="absolute -bottom-0 flex flex-row items-center justify-center w-20 h-20 p-4 bg-brand-primary rounded-full">
