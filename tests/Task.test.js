@@ -12,6 +12,9 @@ jest.mock("lucide-react-native", () => ({
   Plus: "Plus",
 }));
 
+// Mock @react-native-community/datetimepicker
+jest.mock("@react-native-community/datetimepicker", () => "DateTimePicker");
+
 describe("RenderTask", () => {
   test("renders a task", () => {
     const task = {
@@ -19,6 +22,7 @@ describe("RenderTask", () => {
       title: "Test Task",
       subtitle: "Test Category",
       completed: false,
+      dueDate: new Date("2024-10-20T14:00:00"),
     };
     const mockToggleTask = jest.fn();
 
@@ -29,5 +33,9 @@ describe("RenderTask", () => {
     const categoryElement = screen.getByText("Test Category");
     expect(titleElement).toBeTruthy();
     expect(categoryElement).toBeTruthy();
+
+    // Check if the due date is displayed
+    const dueDateText = screen.getByText(/Due: .* at .*/);
+    expect(dueDateText).toBeTruthy();
   });
 });

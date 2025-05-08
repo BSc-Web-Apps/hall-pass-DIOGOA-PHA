@@ -81,6 +81,8 @@ export default function HomeScreen() {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [pickerMode, setPickerMode] = useState<"date" | "time">("date");
+  const [dateInput, setDateInput] = useState("");
+  const [timeInput, setTimeInput] = useState("");
 
   useEffect(() => {
     const initialTasks: Task[] = [
@@ -137,6 +139,19 @@ export default function HomeScreen() {
     setTasks(initialTasks);
   }, []);
 
+  useEffect(() => {
+    // Update input fields when dueDate changes
+    if (newTask.dueDate) {
+      setDateInput(newTask.dueDate.toLocaleDateString());
+      setTimeInput(
+        newTask.dueDate.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+      );
+    }
+  }, [newTask.dueDate]);
+
   const toggleTask = (id: string) => {
     setTasks((prevTasks) =>
       prevTasks.map((task) =>
@@ -181,6 +196,40 @@ export default function HomeScreen() {
         );
         setNewTask((prev) => ({ ...prev, dueDate: selectedDate }));
       }
+    }
+  };
+
+  const handleDateInputChange = (text: string) => {
+    setDateInput(text);
+    try {
+      const [month, day, year] = text.split("/").map((num) => parseInt(num));
+      if (month && day && year) {
+        const newDate = new Date(newTask.dueDate);
+        newDate.setMonth(month - 1);
+        newDate.setDate(day);
+        newDate.setFullYear(year);
+        setNewTask((prev) => ({ ...prev, dueDate: newDate }));
+      }
+    } catch (error) {
+      // Invalid date format, ignore
+    }
+  };
+
+  const handleTimeInputChange = (text: string) => {
+    setTimeInput(text);
+    try {
+      const [time, period] = text.split(" ");
+      const [hours, minutes] = time.split(":").map((num) => parseInt(num));
+      if (hours && minutes) {
+        const newDate = new Date(newTask.dueDate);
+        let adjustedHours = hours;
+        if (period === "PM" && hours !== 12) adjustedHours += 12;
+        if (period === "AM" && hours === 12) adjustedHours = 0;
+        newDate.setHours(adjustedHours, minutes);
+        setNewTask((prev) => ({ ...prev, dueDate: newDate }));
+      }
+    } catch (error) {
+      // Invalid time format, ignore
     }
   };
 
@@ -235,27 +284,44 @@ export default function HomeScreen() {
               }
             />
 
-            <View className="flex-row space-x-3 mb-4">
-              <Pressable
-                className="flex-1 bg-gray-700 p-3 rounded-lg"
-                onPress={openDatePicker}
-              >
-                <Text className="text-white">
-                  Date: {newTask.dueDate.toLocaleDateString()}
-                </Text>
-              </Pressable>
-              <Pressable
-                className="flex-1 bg-gray-700 p-3 rounded-lg"
-                onPress={openTimePicker}
-              >
-                <Text className="text-white">
-                  Time:{" "}
-                  {newTask.dueDate.toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </Text>
-              </Pressable>
+            <View className="mb-4">
+              <Text className="text-white mb-2">Due Date and Time</Text>
+              <View className="flex-row space-x-3">
+                <View className="flex-1">
+                  <TextInput
+                    className="bg-gray-700 text-white p-3 rounded-lg"
+                    placeholder="MM/DD/YYYY"
+                    placeholderTextColor="#9CA3AF"
+                    value={dateInput}
+                    onChangeText={handleDateInputChange}
+                  />
+                  <Pressable
+                    className="mt-1 bg-gray-600 p-2 rounded-lg"
+                    onPress={openDatePicker}
+                  >
+                    <Text className="text-white text-center">
+                      Use Date Picker
+                    </Text>
+                  </Pressable>
+                </View>
+                <View className="flex-1">
+                  <TextInput
+                    className="bg-gray-700 text-white p-3 rounded-lg"
+                    placeholder="HH:MM AM/PM"
+                    placeholderTextColor="#9CA3AF"
+                    value={timeInput}
+                    onChangeText={handleTimeInputChange}
+                  />
+                  <Pressable
+                    className="mt-1 bg-gray-600 p-2 rounded-lg"
+                    onPress={openTimePicker}
+                  >
+                    <Text className="text-white text-center">
+                      Use Time Picker
+                    </Text>
+                  </Pressable>
+                </View>
+              </View>
             </View>
 
             {(showDatePicker || showTimePicker) && (
