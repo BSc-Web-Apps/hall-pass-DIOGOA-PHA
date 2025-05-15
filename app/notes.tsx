@@ -9,7 +9,7 @@ import {
   Pressable,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { Plus } from "lucide-react-native";
+import { CircleCheck, Plus } from "lucide-react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useRouter } from "expo-router";
 import RenderTask, { type Task } from "~/components/RenderTask";
@@ -187,9 +187,12 @@ export default function NotesPage() {
       <TouchableOpacity onPress={router.back} className="mb-4">
         <Ionicons name="arrow-back" size={28} color="white" />
       </TouchableOpacity>
-
-      <Text className="text-3xl text-white font-bold mb-6">Notes & Tasks</Text>
-
+      <View className="flex-row items-center mb-6">
+        <Text className="text-3xl text-white font-bold mr-2">HallPass</Text>
+        <View className="w-7 h-7 border-2 border-white rounded-full items-center justify-center">
+          <Ionicons name="checkmark" size={14} color="white" />
+        </View>
+      </View>
       <FlatList
         data={tasks}
         keyExtractor={(item) => item.id}
