@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react-native";
-import { RenderTask } from "../app/index";
+import RenderTask from "../components/RenderTask";
 
 // Mock @expo/vector-icons
 jest.mock("@expo/vector-icons", () => ({

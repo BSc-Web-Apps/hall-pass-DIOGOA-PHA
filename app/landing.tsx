@@ -2,9 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-
-// ✅ Import the image
-import LandingImage from "../assets/images/landing-image.png";
+import landingImage from "./assets/images/landing-image-saved.png";
 
 export default function LandingPage() {
   const router = useRouter();
@@ -16,7 +14,7 @@ export default function LandingPage() {
         <Text style={styles.logo}>HallPass ✅</Text>
 
         <View style={styles.imageWrapper}>
-          <Image source={LandingImage} style={styles.image} />
+          <Image source={landingImage} style={styles.image} />
         </View>
 
         <Text style={styles.tagline}>Uni. Sorted.</Text>
