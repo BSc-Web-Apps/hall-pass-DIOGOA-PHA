@@ -11,6 +11,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { Plus } from "lucide-react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { useRouter } from "expo-router";
 
 interface Task {
   id: string;
@@ -71,6 +72,7 @@ export const RenderTask = ({ item, toggleTask }: RenderTaskProps) => (
 );
 
 export default function NotesPage() {
+  const router = useRouter();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [newTask, setNewTask] = useState({
@@ -207,9 +209,7 @@ export default function NotesPage() {
         newDate.setFullYear(year);
         setNewTask((prev) => ({ ...prev, dueDate: newDate }));
       }
-    } catch (error) {
-      // Invalid date format, ignore
-    }
+    } catch (error) {}
   };
 
   const handleTimeInputChange = (text: string) => {
@@ -225,9 +225,7 @@ export default function NotesPage() {
         newDate.setHours(adjustedHours, minutes);
         setNewTask((prev) => ({ ...prev, dueDate: newDate }));
       }
-    } catch (error) {
-      // Invalid time format, ignore
-    }
+    } catch (error) {}
   };
 
   const openDatePicker = () => {
@@ -241,8 +239,14 @@ export default function NotesPage() {
   };
 
   return (
-    <View className="flex-1 bg-black p-6">
+    <View className="flex-1 bg-black p-6 pt-12">
+      {/* Back Button */}
+      <TouchableOpacity onPress={router.back} className="mb-4">
+        <Ionicons name="arrow-back" size={28} color="white" />
+      </TouchableOpacity>
+
       <Text className="text-3xl text-white font-bold mb-6">Notes & Tasks</Text>
+
       <FlatList
         data={tasks}
         keyExtractor={(item) => item.id}
