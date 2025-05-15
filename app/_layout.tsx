@@ -1,15 +1,9 @@
 import "~/global.css";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Slot } from "expo-router";
 import * as React from "react";
 import { Platform } from "react-native";
 import { setAndroidNavigationBar } from "~/lib/android-navigation-bar";
-import { Home as HomeIcon } from "~/lib/icons/Home";
-import { Info } from "~/lib/icons/Info";
 import { useColorScheme } from "~/lib/useColorScheme";
-import HomeScreen from "./index";
-import SettingsScreen from "./settings";
-
-const Tab = createBottomTabNavigator();
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -39,36 +33,7 @@ export default function RootLayout() {
     return null;
   }
 
-  return (
-    <Tab.Navigator
-      screenOptions={{
-        headerShown: false,
-        tabBarStyle: {
-          backgroundColor: "hsl(11, 72%, 3%)",
-          borderTopColor: "transparent",
-        },
-        tabBarActiveTintColor: "hsl(11, 100%, 60%)",
-        tabBarInactiveTintColor: "hsla(11, 20%, 64%, 0.5)",
-      }}
-    >
-      <Tab.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <HomeIcon size={size} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Settings"
-        component={SettingsScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => <Info size={size} color={color} />,
-        }}
-      />
-    </Tab.Navigator>
-  );
+  return <Slot />;
 }
 
 const useIsomorphicLayoutEffect =
